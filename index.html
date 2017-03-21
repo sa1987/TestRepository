@@ -8,7 +8,7 @@
 
 
 <script>
-/*download the team data JSON on page load and execute teh function to populate dropdown with team data*/
+/*team data from json/
 $(document).ready(function(){
         $.getJSON("/teams.json", function(data) {
         $.each(data.teams,function(key,value){
@@ -38,7 +38,7 @@ $(document).ready(function(){
  </script>
 
 <script>
-/*code to avoid non-numeric entries in employee ID field*/
+/*need to change to alphabet*/
 function isNumberKey(evt){
     var charCode = (evt.which) ? evt.which : event.keyCode
     if (charCode > 31 && (charCode < 48 || charCode > 57))
@@ -49,7 +49,7 @@ function isNumberKey(evt){
 </script>
 
 <script>
-/*data validation code called frequently to see whether we are ready to enable "check button"*/
+
   var validTeam=false;
   var validFromDate=false;
   var validToDate=false;
