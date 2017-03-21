@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+<script src="https://code.jquery.com/jquery-1.12.4.js"></script>
+<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+
+
+<script>
+/*download the team data JSON on page load and execute teh function to populate dropdown with team data*/
+$(document).ready(function(){
+        $.getJSON("/teams.json", function(data) {
+        $.each(data.teams,function(key,value){
+        $("#teamSheetID").append($('<option />').val(value.sheetId).text(value.team));
+        });
+});
+});
+</script>
+
+ <script>
+/*Two datepickers - one for fromDate and one for toDate*/
+  $(function() {$( "#datepicker" ).datepicker({ dateFormat: 'dd-mm-yy',minDate: 0,onSelect: function() {
+             var date = $(this).datepicker('getDate');
+             if (date) {
+                  validFromDate=true;
+                  //date.setDate(date.getDate()+1); /*toDate should atleast be fromDate*/
+                  $("#datepicker1").datepicker("option", "setDate", date) /*set toDate as fromDate - to clear any previously selected dates*/
+                  $("#datepicker1").datepicker("option", "minDate", date)
+             }
+                  validateData();
+          }});});
+/*on launch, set toDate min as current date*/
+  $(function() {$( "#datepicker1" ).datepicker({ dateFormat: 'dd-mm-yy',minDate: 0,onSelect: function(){
+             validToDate=true;
+             validateData();
+          }});});
+ </script>
+
+<script>
+/*code to avoid non-numeric entries in employee ID field*/
+function isNumberKey(evt){
+    var charCode = (evt.which) ? evt.which : event.keyCode
+    if (charCode > 31 && (charCode < 48 || charCode > 57))
+        return false;
+    validateData();
+    return true;
+}
+</script>
+
+<script>
+/*data validation code called frequently to see whether we are ready to enable "check button"*/
+  var validTeam=false;
+  var validFromDate=false;
+  var validToDate=false;
+function validateData(){
+
+if(($("#teamSheetID").val() != "None") && validFromDate && validToDate && ($("#empID").val().length>=0)){
+        $("#btnCheck").prop('disabled', false);
+}
+else{
+        $("#btnCheck").prop('disabled', true);
+}
+return true;
+}              
+
+  $("#btnSubmit").prop('disabled', false);
+
+</script>
+
+<script>
+function validateSubmit(){
+        $.get( "/cgi/test.py?"+$("#ptoForm").serialize(), function (data){
+        if(true==data.status){
+                $("#statusBox").html("Submit enabled");
+        }
+        $("#statusBox").html(data.err);
+        console.log(data.status);
+});
+}
+</script>
+
+</head>
+
+<body>
+
+<form action="/cgi/submit.py" id="ptoForm">
+Team:<select  name="team_sheetID" id="teamSheetID" onchange="validateData()">
+<option value="None" selected="Selected">Select team</option>
+</select><br>
+From Date: <input type="date" name="fromDate" id="datepicker"> <br>
+To Date: <input type="date" name="toDate" id="datepicker1"> <br>
+Employee ID: <input type="text" name="employeeID" id="empID" onkeypress="return isNumberKey(event)" maxlength="15"> <br/>
+<input type="button" value="Check" id="btnCheck" disabled="true" onClick="validateSubmit()">
+<input type="submit" value="Submit" id="btnSubmit" disabled="true">
+</form>
+<div id="statusBox"/>
+</body>
+
+</html>
