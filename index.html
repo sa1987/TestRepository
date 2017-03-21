@@ -70,7 +70,7 @@ return true;
 
 <script>
 function validateSubmit(){
-        $.get( "/cgi/test.py?"+$("#ptoForm").serialize(), function (data){
+        $.get( "smartcgi.py?"+$("#ptoForm").serialize(), function (data){
         if(true==data.status){
                 $("#statusBox").html("Submit enabled");
         }
