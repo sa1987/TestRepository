@@ -2,11 +2,13 @@
    "teams": [
       {
          "team": "team1",
-         "sheetId": 5802696138614660
+         "sheetId": 5802696138614660,
+         "ptoPer": 20
       },
       {
          "team": "team2",
-         "sheetId": 301650
+         "sheetId": 564760182843268
+          "ptoPer": 20
       }
    ]
 }
