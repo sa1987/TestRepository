@@ -66,7 +66,7 @@ return true;
 
 <script>
 function validateSubmit(){
-        $.get( "/cgi-bin/zz.py?"+$("#ptoForm").serialize(), function (data){
+        $.get( "zz.py?"+$("#ptoForm").serialize(), function (data){
         if(true==data.status){
                 $("#statusBox").html("Submit enabled");
                 $("#btnSubmit").prop('disabled', false);
@@ -81,7 +81,7 @@ function validateSubmit(){
 
 <body>
 
-<form action="/cgi-bin/ss_submit.py" id="ptoForm">
+<form action="ss_submit.py" id="ptoForm">
 Team:<select  name="team_sheetID" id="teamSheetID" onchange="validateData()">
 <option value="None" selected="Selected">Select team</option>
 </select><br>
