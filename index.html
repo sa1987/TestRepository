@@ -8,7 +8,7 @@
 
 
 <script>
-/*team data from json*/
+/*team json data*/
 $(document).ready(function(){
         $.getJSON("/teams.json", function(data) {
         $.each(data.teams,function(key,value){
@@ -19,13 +19,13 @@ $(document).ready(function(){
 </script>
 
  <script>
-/*Two datepickers - one for fromDate and one for toDate*/
+/*fromdate and todate*/
   $(function() {$( "#datepicker" ).datepicker({ dateFormat: 'dd-mm-yy',minDate: 0,onSelect: function() {
              var date = $(this).datepicker('getDate');
              if (date) {
                   validFromDate=true;
-                  //date.setDate(date.getDate()+1); /*toDate should atleast be fromDate*/
-                  $("#datepicker1").datepicker("option", "setDate", date) /*set toDate as fromDate - to clear any previously selected dates*/
+                  //date.setDate(date.getDate()+1);
+                  $("#datepicker1").datepicker("option", "setDate", date)
                   $("#datepicker1").datepicker("option", "minDate", date)
              }
                   validateData();
@@ -38,23 +38,21 @@ $(document).ready(function(){
  </script>
 
 <script>
-/*need to change to alphabet*/
+/*need to change to alphabet, now accepts nos and alphabets*/
 function isNumberKey(evt){
     var charCode = (evt.which) ? evt.which : event.keyCode
-    if (charCode > 31 && (charCode < 48 || charCode > 57))
-        return false;
+    if ((charCode > 64 && charCode < 91)) || (charCode > 96 && charCode < 123) || charCode == 8)
+        return true;
     validateData();
     return true;
 }
 </script>
 
 <script>
-
   var validTeam=false;
   var validFromDate=false;
   var validToDate=false;
 function validateData(){
-
 if(($("#teamSheetID").val() != "None") && validFromDate && validToDate && ($("#empID").val().length>=0)){
         $("#btnCheck").prop('disabled', false);
 }
@@ -62,17 +60,16 @@ else{
         $("#btnCheck").prop('disabled', true);
 }
 return true;
-}              
-
+}
   $("#btnSubmit").prop('disabled', false);
-
 </script>
 
 <script>
 function validateSubmit(){
-        $.get( "smartcgi.py?"+$("#ptoForm").serialize(), function (data){
+        $.get( "/cgi-bin/zz.py?"+$("#ptoForm").serialize(), function (data){
         if(true==data.status){
                 $("#statusBox").html("Submit enabled");
+                $("#btnSubmit").prop('disabled', false);
         }
         $("#statusBox").html(data.err);
         console.log(data.status);
@@ -84,13 +81,13 @@ function validateSubmit(){
 
 <body>
 
-<form action="smartcgi.py" id="ptoForm">
+<form action="/cgi-bin/ss_submit.py" id="ptoForm">
 Team:<select  name="team_sheetID" id="teamSheetID" onchange="validateData()">
 <option value="None" selected="Selected">Select team</option>
 </select><br>
 From Date: <input type="date" name="fromDate" id="datepicker"> <br>
 To Date: <input type="date" name="toDate" id="datepicker1"> <br>
-Employee ID: <input type="text" name="employeeID" id="empID" onkeypress="return isNumberKey(event)" maxlength="15"> <br/>
+Employee ID: <input type="text" name="employeeID" id="empID" onkeypress="return isNumberKey(event)" maxlength="10"> <br/>
 <input type="button" value="Check" id="btnCheck" disabled="true" onClick="validateSubmit()">
 <input type="submit" value="Submit" id="btnSubmit" disabled="true">
 </form>
